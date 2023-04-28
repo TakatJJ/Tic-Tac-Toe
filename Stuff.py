@@ -1,3 +1,5 @@
+import PySimpleGUI as sg
+
 def Result(position,gameIc, player):
     if player == False:
         gameIc.gameBoard[position] = "O"
@@ -97,6 +99,10 @@ class Game:
         self.Evaluate(self.Value())
         self.gameBoard = ["X","X","O","O","O","X","X","O","O"]
         self.Evaluate(self.Value())
+    
+    def Reset(self):
+        self.gameBoard = list(" "*9)
+        
 
 class NodeGame:
     def __init__(self,gameBoard):
@@ -191,3 +197,20 @@ def Minimax(game, IsMaximizingPlayer):
             game.children.append(copy)
             game.setValue(value)
         return value
+
+def TurnToString(value):
+    if value == -1:
+        return "You Win \n Try Again?"
+    elif value == 1:
+        return "You Lose \n Try Again?"
+    elif value == 0:
+        return "Draw \n Try Again?"
+    
+def AfterGame(board, window):
+    if sg.PopupYesNo(TurnToString(board.Value()),title="Game Over") == "Yes":
+        board.Reset()
+        for i in range (9):
+            window[f"{i}"].update(" ")
+        return True
+    else:
+        return False
